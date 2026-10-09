@@ -29,11 +29,11 @@ const seedEquipment=[
 ].map(([patrimonio,categoria,fabricante,modelo,calibre,serie,status])=>({patrimonio,categoria,fabricante,modelo,calibre,serie,status,unidade:'PPSC'}));
 
 const officers=[
- {matricula:'202401',nome:'João da Silva',graduacao:'2º Sargento',situacao:'Ativo',unidade:'PPSC'},
- {matricula:'202402',nome:'Ana Oliveira',graduacao:'1º Tenente',situacao:'Ativo',unidade:'PPSC'},
- {matricula:'202403',nome:'Carlos Souza',graduacao:'Cabo',situacao:'Ativo',unidade:'PPSC'},
- {matricula:'202404',nome:'Mariana Costa',graduacao:'3º Sargento',situacao:'Ativo',unidade:'PPSC'},
- {matricula:'202405',nome:'Rafael Santos',graduacao:'Soldado',situacao:'Afastado',unidade:'PPSC'}
+ {matricula:'202401',nome:'João da Silva',graduacao:'POLICIAL PENAL',situacao:'Ativo',unidade:'PPSC'},
+ {matricula:'202402',nome:'Ana Oliveira',graduacao:'POLICIAL PENAL',situacao:'Ativo',unidade:'PPSC'},
+ {matricula:'202403',nome:'Carlos Souza',graduacao:'POLICIAL PENAL',situacao:'Ativo',unidade:'PPSC'},
+ {matricula:'202404',nome:'Mariana Costa',graduacao:'POLICIAL PENAL',situacao:'Ativo',unidade:'PPSC'},
+ {matricula:'202405',nome:'Rafael Santos',graduacao:'POLICIAL PENAL',situacao:'Afastado',unidade:'PPSC'}
 ];
 
 function initialState(){return {equipment:structuredClone(seedEquipment),loans:[
@@ -46,7 +46,21 @@ let draft={officer:null,items:[]};
 let officerQuery='';
 let equipmentQuery='';
 
-function loadState(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||initialState()}catch{return initialState()}}
+function loadState(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if(!saved)return initialState();
+  let updated=false;
+  saved.loans.forEach(loan=>{
+   if(loan.officerSnapshot&&loan.officerSnapshot.graduacao!=='POLICIAL PENAL'){
+    loan.officerSnapshot.graduacao='POLICIAL PENAL';
+    updated=true;
+   }
+  });
+  if(updated)localStorage.setItem(STORAGE_KEY,JSON.stringify(saved));
+  return saved;
+ }catch{return initialState()}
+}
 function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
 function esc(value=''){return String(value).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function equipmentById(id){return state.equipment.find(e=>e.patrimonio===id)}
@@ -60,7 +74,7 @@ function addActivity(text){state.activities.unshift(text);state.activities=state
 const views={
  dashboard(){
   const counts={available:state.equipment.filter(e=>e.status==='Disponível').length,loaned:state.equipment.filter(e=>e.status==='Cautelada').length,maintenance:state.equipment.filter(e=>e.status==='Em manutenção').length,active:activeLoans().length};
-  return `<div class="page-head"><div><p class="eyebrow">VISÃO GERAL · PPSC</p><h1>Bom dia, Alex.</h1><p>Acompanhe o acervo e as movimentações da unidade.</p></div><button class="btn primary" data-go="newLoan">＋ Nova cautela</button></div>
+  return `<div class="page-head"><div><p class="eyebrow">VISÃO GERAL · PPSC</p><h1>Bom dia, MARCELO SEIXAS.</h1><p>Acompanhe o acervo e as movimentações da unidade.</p></div><button class="btn primary" data-go="newLoan">＋ Nova cautela</button></div>
   <section class="quick-grid"><div class="metric"><p>Equipamentos disponíveis</p><strong>${counts.available}</strong><small>prontos para cautela</small></div><div class="metric" style="--wash:#e5eff7"><p>Itens cautelados</p><strong>${counts.loaned}</strong><small>sob responsabilidade</small></div><div class="metric" style="--wash:#fae9d6"><p>Em manutenção</p><strong>${counts.maintenance}</strong><small>temporariamente indisponíveis</small></div><div class="metric" style="--wash:#edf0e7"><p>Cautelas ativas</p><strong>${counts.active}</strong><small>registros em aberto</small></div></section>
   <div class="dashboard-grid"><section class="panel"><div class="panel-head"><h2>Ações rápidas</h2></div><div class="action-cards"><button class="action-card" data-go="newLoan"><span>＋</span><b>Nova cautela</b><small>Vincular materiais</small></button><button class="action-card" data-go="officers"><span>⌕</span><b>Localizar policial</b><small>Busca por matrícula</small></button><button class="action-card" data-go="returns"><span>↩</span><b>Registrar devolução</b><small>Parcial ou total</small></button></div></section>
   <section class="panel"><div class="panel-head"><h2>Atividade recente</h2></div><div class="activity">${state.activities.map((a,i)=>`<div class="activity-item"><i></i><div><b>${esc(a)}</b><small>SIMB · PPSC</small></div><time>${i?'Anterior':'Agora'}</time></div>`).join('')}</div></section></div>`
