@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#172019">
+  <meta name="description" content="Protótipo funcional do Sistema Integrado de Material Bélico da PPSC">
+  <title>SIMB · PPSC</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <section id="loginScreen" class="login-screen">
+    <div class="login-visual" aria-hidden="true">
+      <div class="brand-mark large">S</div>
+      <p class="eyebrow">PPSC · CONTROLE INSTITUCIONAL</p>
+      <h1>Material sob controle.<br>Histórico sob custódia.</h1>
+      <p>Rastreabilidade e cautelas em um fluxo simples, seguro e objetivo.</p>
+      <div class="login-stats"><span>UNIDADE<br><strong>PPSC</strong></span><span>AMBIENTE<br><strong>DEMONSTRAÇÃO</strong></span></div>
+    </div>
+    <form id="loginForm" class="login-card">
+      <div class="mobile-brand"><div class="brand-mark">S</div><b>SIMB</b></div>
+      <p class="eyebrow">ACESSO RESTRITO</p>
+      <h2>Bem-vindo ao SIMB</h2>
+      <p class="muted">Entre com as credenciais fictícias para acessar o sistema.</p>
+      <label>Matrícula do usuário<input id="loginMatricula" inputmode="numeric" value="100001" required></label>
+      <label>Senha<div class="password-wrap"><input id="loginPassword" type="password" value="simb123" required><button id="togglePassword" type="button" class="icon-btn" aria-label="Exibir senha">◉</button></div></label>
+      <button class="btn primary full" type="submit">ENTRAR NO SISTEMA <span>→</span></button>
+      <p class="demo-hint">Demonstração: matrícula <b>100001</b> · senha <b>simb123</b></p>
+    </form>
+  </section>
+
+  <div id="appShell" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-head"><div class="brand-mark">S</div><div><strong>SIMB</strong><small>UNIDADE PPSC</small></div><button id="closeMenu" class="icon-btn mobile-only" aria-label="Fechar menu">×</button></div>
+      <nav id="navMenu" aria-label="Menu principal">
+        <button data-view="dashboard" class="active"><span>▦</span>Painel</button>
+        <button data-view="newLoan"><span>＋</span>Nova cautela</button>
+        <button data-view="officers"><span>⌕</span>Consultar policial</button>
+        <button data-view="loans"><span>≣</span>Cautelas ativas</button>
+        <button data-view="returns"><span>↩</span>Devoluções</button>
+        <button data-view="equipment"><span>◇</span>Equipamentos</button>
+      </nav>
+      <div class="sidebar-foot"><div class="avatar">AM</div><div><b>Alex Martins</b><small>Administrador</small></div><button id="logoutBtn" class="icon-btn" title="Sair" aria-label="Sair">↪</button></div>
+    </aside>
+    <div id="scrim" class="scrim"></div>
+    <main>
+      <header class="topbar"><button id="openMenu" class="icon-btn mobile-only" aria-label="Abrir menu">☰</button><div><p class="eyebrow">SISTEMA INTEGRADO DE MATERIAL BÉLICO</p><b id="pageTitle">Painel operacional</b></div><div class="top-actions"><span class="unit-pill"><i></i>PPSC</span><button id="resetBtn" class="icon-btn" title="Restaurar dados fictícios" aria-label="Restaurar dados">↻</button></div></header>
+      <div id="content" class="content"></div>
+    </main>
+  </div>
+
+  <dialog id="equipmentDialog" class="modal">
+    <form method="dialog" class="modal-card" id="equipmentPickerForm">
+      <div class="modal-head"><div><p class="eyebrow">ACERVO PPSC</p><h2>Vincular equipamentos</h2></div><button value="cancel" class="icon-btn" aria-label="Fechar">×</button></div>
+      <label class="search"><span>⌕</span><input id="pickerSearch" placeholder="Patrimônio, série, modelo, calibre..."></label>
+      <div id="pickerList" class="picker-list"></div>
+      <div class="modal-actions"><span id="pickerCount" class="muted">0 selecionados</span><button value="cancel" class="btn ghost">Cancelar</button><button id="confirmPicker" value="default" class="btn primary">Vincular selecionados</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="equipmentFormDialog" class="modal">
+    <form id="newEquipmentForm" class="modal-card">
+      <div class="modal-head"><div><p class="eyebrow">NOVO REGISTRO</p><h2>Cadastrar equipamento</h2></div><button type="button" data-close="equipmentFormDialog" class="icon-btn">×</button></div>
+      <div class="form-grid">
+        <label>Patrimônio<input name="patrimonio" placeholder="SIMB-ARM-0030" required></label>
+        <label>Número de série<input name="serie" required></label>
+        <label>Categoria<select name="categoria" required><option>Pistola</option><option>Fuzil</option><option>Carabina</option><option>Fuzil de precisão</option><option>Espingarda</option><option>Dispositivo elétrico</option></select></label>
+        <label>Fabricante<input name="fabricante" required></label>
+        <label>Modelo<input name="modelo" required></label>
+        <label>Calibre<input name="calibre" required></label>
+      </div>
+      <p class="unit-note">Unidade vinculada automaticamente: <b>PPSC</b></p>
+      <div class="modal-actions"><button type="button" data-close="equipmentFormDialog" class="btn ghost">Cancelar</button><button class="btn primary">Salvar equipamento</button></div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
