@@ -1,0 +1,10 @@
+{
+  "name": "Sistema Integrado de Material Bélico",
+  "short_name": "SIMB",
+  "description": "Gestão fictícia de cautelas e equipamentos da unidade PPSC",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#111814",
+  "theme_color": "#172019"
+}
